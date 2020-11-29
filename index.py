@@ -12,9 +12,9 @@ from views.stock import stock_layout
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Home", href="/home")),
+        dbc.NavItem(dbc.NavLink("Customers", href="/customers")),
         dbc.NavItem(dbc.NavLink("Stock", href="/stock")),
-        dbc.NavItem(dbc.NavLink("Orders", href="/orders")),
-        dbc.NavItem(dbc.NavLink("Customers", href="/customers"))
+        dbc.NavItem(dbc.NavLink("Orders", href="/orders"))
     ],
     brand="Camunzon E-Commerce",
     brand_href="#",

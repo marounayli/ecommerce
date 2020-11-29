@@ -4,4 +4,4 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
-stock_layout = [html.H3("Stock")]
+stock_layout = [html.Div([html.H3("Camunzon stock")], className='layout-container')]
