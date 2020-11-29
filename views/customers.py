@@ -96,17 +96,6 @@ def toggle_collapse(n, is_open):
 
 
 @app.callback(
-    Output("customer-collapse-delete", "is_open"),
-    [Input("customer-collapse-button-delete", "n_clicks")],
-    [State("customer-collapse-delete", "is_open")],
-)
-def toggle_collapse(n, is_open):
-    if n:
-        return not is_open
-    return is_open
-
-
-@app.callback(
     Output('customer-table', 'data'),
     [Input('location', 'pathname'),
     Input('customer_submit', 'n_clicks')],
@@ -123,7 +112,7 @@ def customer_table(pathname, create, name, email, address, country):
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         if button_id == 'customer_submit':
             customer = {"name": name, "address": address, "email": email, "countryCode": country}
-            response = requests.post(API_ENDPOINTS['CUSTOMER']['POST'], json=customer)
+            response = requests.post(API_ENDPOINTS['CUSTOMERS']['POST'], json=customer)
         else:
             pass
     return requests.get(API_ENDPOINTS['CUSTOMERS']['GET']).json()

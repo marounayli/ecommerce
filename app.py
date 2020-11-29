@@ -10,8 +10,14 @@ app.title = 'Camunzon'
 
 API_ENDPOINTS = {
     'CUSTOMERS':
-        {"GET" : "http://localhost:5000/customers"},
-    'CUSTOMER':
-        {"POST": "http://localhost:5000/customer"}
-    
+        {"GET" : "http://localhost:5000/customers",
+        "GET1": "http://localhost:5000/customer/",
+        "POST": "http://localhost:5000/customer"},
+    'STOCK':
+        {"GET" : "http://localhost:5000/products",
+        "GET1" : "http://localhost:5000/product/",
+        "POST" : "http://localhost:5000/product"},
+    'ORDER':
+        {"GET" : "http://localhost:5000/orders",
+        "POST": "http://localhost:5000/order"}
 }

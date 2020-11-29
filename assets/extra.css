@@ -15,3 +15,14 @@
 .customer-button{
     margin: 0.75rem 0.75rem;
 }
+
+.stock-button{
+    margin: 0.75rem 0.75rem;
+}
+.container{
+    max-width: 9999999px !important;
+}
+
+.form-component{
+    max-width: 50rem;
+}

@@ -17,7 +17,7 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink("Orders", href="/orders"))
     ],
     brand="Camunzon E-Commerce",
-    brand_href="#",
+    brand_href="/home",
     color="primary",
     dark=True,
 )
