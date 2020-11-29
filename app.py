@@ -6,6 +6,7 @@ server = flask.Flask('app')
 app = dash.Dash('app', external_stylesheets=[dbc.themes.FLATLY], server=server)
 
 app.config['suppress_callback_exceptions'] = True
+# Setting app title
 app.title = 'Camunzon'
 
 API_ENDPOINTS = {
