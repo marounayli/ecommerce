@@ -16,10 +16,10 @@ order_columns = {"orderId": "ID",
                  "quantity": "Quantity",
                  "total": "Total Price",
                  "currency": "Currency",
-                 "payment": "Payment",
-                 "shipmentInitiated": "Shipment Initiated",
-                 "shipment": "Shipment Status"}
-columns_order = ["orderId", "customerName", "itemDescription", "quantity", "total", "currency",  "payment", "shipment", "shipmentInitiated"]
+                 "paymentSuccessful": "Payment",
+                 "shipmentInitiatedTime": "Shipment Initiated",
+                 "shipmentInitiated": "Shipment Status"}
+columns_order = ["orderId", "customerName", "itemDescription", "quantity", "total", "currency",  "paymentSuccessful", "shipmentInitiated", "shipmentInitiatedTime"]
 order_dict = [{"name": order_columns[k], "id": k} for k in columns_order]
 
 orders_table = html.Div(dbc.Spinner(dash_table.DataTable(id='order-table', columns= order_dict,
@@ -148,27 +148,10 @@ def stock_table(pathname, create, customerId, itemId, quantity, cardNumber):
                 "customerEmail": requests.get(API_ENDPOINTS['CUSTOMERS']['GET1']+str(customerId)).json()['email'],
                 "cardNumber": cardNumber
             }
-            requests.post(API_ENDPOINTS['ORDER']['POST'], json=order)
+            camunda_request = requests.post(API_ENDPOINTS['ORDER']['POST'], json=order)
         else:
             pass
-    orders = requests.get(API_ENDPOINTS['ORDER']['GET']).json()
-    for order in orders:
-        orderid = order['orderId']
-        order["total"] = order["quantity"] * order["pricePerUnit"]
-        payment = requests.get(API_ENDPOINTS["PAYMENT"]["ORDERID"]+str(orderid))
-        shipment = requests.get(API_ENDPOINTS["SHIPMENT"]["ORDERID"]+str(orderid))
-        if payment.status_code == 404:
-            order['payment'] = 'Pending'
-        else:
-            payment_body = payment.json()
-            order['payment'] = "Successful" if payment_body["paymentSuccessful"] else "Failed !"
-        if shipment.status_code == 404:
-            order['shipment'] = 'Pending'
-            order['shipmentInitiated'] = "N/A"
-        else:
-            shipment_body = shipment.json()
-            order['shipment'] = 'True' if shipment_body['initiated'] else "False" 
-            order['shipmentInitiated'] = shipment_body['initiatedTime'] if shipment_body['initiated'] else "N/A"
+    orders = requests.get(API_ENDPOINTS['ORDER']['DETAILS']).json()
     return orders
 
 
