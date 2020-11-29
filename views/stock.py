@@ -1,4 +1,5 @@
 import json
+from logging import PlaceHolder
 from app import app, API_ENDPOINTS
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -8,11 +9,12 @@ import dash_table
 import requests
 import dash
 
-stock_columns = {"productId": "ID", "productDescription": "Description", "pricePerUnit": "Price", "currency": "Currency", "quantityAvailable": "Available"}
-columns_order = ["productId", "productDescription", "pricePerUnit", "currency", "quantityAvailable"]
+stock_columns = {"productId": "ID", "productDescription": "Description", "pricePerUnit": "Price", "currency": "Currency", "quantity": "Available",
+'unitWeight': 'Unit Weight (kg)'}
+columns_order = ["productId", "productDescription", "pricePerUnit", "currency", "quantity", "unitWeight"]
 product_dict = [{"name": stock_columns[k], "id": k} for k in columns_order]
 
-stock_table = html.Div(dash_table.DataTable(id='stock-table', columns= product_dict,
+stock_table = html.Div(dbc.Spinner(dash_table.DataTable(id='stock-table', columns= product_dict,
 style_cell_conditional=[
         {'if': {'column_id': 'productId'},
          'width': '10%'},
@@ -20,7 +22,7 @@ style_cell_conditional=[
          'width': '10%'},
          {'if': {'column_id': 'pricePerUnit'},
          'width': '10%'},
-         {'if': {'column_id': 'quantityAvailable'},
+         {'if': {'column_id': 'quantity'},
          'width': '10%'}],
 style_data_conditional=[
         {'if': {'row_index': 'odd'},
@@ -31,7 +33,7 @@ style_header={
         'fontWeight': 'bold'
     }, 
 style_as_list_view=True,
-), className='page-card')
+)), className='page-card')
 
 
 description_input = dbc.FormGroup(
@@ -60,6 +62,16 @@ currency_input = dbc.FormGroup(
     ], className='form-component'
 )
 
+weight_input = dbc.FormGroup(
+        [
+        dbc.Label("Unit weight (in kg)", html_for="product_weight"),
+        dbc.Input(
+            id="product_weight",
+            type="number",
+            placeholder="Enter unit weight"
+        ),
+    ], className='form-component'
+)
 
 available_input = dbc.FormGroup(
     [
@@ -69,7 +81,7 @@ available_input = dbc.FormGroup(
 )
 
 
-product_form = dbc.Form([description_input, price_input, currency_input, available_input, dbc.Button('Submit', id='product_submit', className="mb-3", color='primary')])
+product_form = dbc.Form([description_input, price_input, currency_input, weight_input, available_input, dbc.Button('Submit', id='product_submit', className="mb-3", color='primary')])
 
 create_product = html.Div(
     [
@@ -110,9 +122,10 @@ def toggle_collapse(n, is_open):
     [State('product_description', 'value'),
     State('product_price', 'value'),
     State('product_currency', 'value'),
-    State('product_available', 'value')]
+    State('product_available', 'value'),
+    State('product_weight', 'value')]
 )
-def stock_table(pathname, create, description, price, currency, available):
+def stock_table(pathname, create, description, price, currency, available, weight):
     ctx = dash.callback_context
     if not ctx.triggered:
         pass
@@ -122,7 +135,8 @@ def stock_table(pathname, create, description, price, currency, available):
             product = {"productDescription": description,
                        "pricePerUnit": price,
                         "currency": currency,
-                        "quantityAvailable": available}
+                        "quantity": available,
+                        'unitWeight': weight}
             requests.post(API_ENDPOINTS['STOCK']['POST'], json=product)
         else:
             pass

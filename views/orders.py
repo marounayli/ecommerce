@@ -1,5 +1,6 @@
 import json
-from logging import PlaceHolder
+from logging import PlaceHolder, shutdown
+
 from app import app, API_ENDPOINTS
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -14,14 +15,17 @@ order_columns = {"orderId": "ID",
                  "itemDescription": "Product Description",
                  "quantity": "Quantity",
                  "total": "Total Price",
-                 "currency": "Currency"}
-columns_order = ["orderId", "customerName", "itemDescription", "quantity", "total", "currency"]
+                 "currency": "Currency",
+                 "payment": "Payment",
+                 "shipmentInitiated": "Shipment Initiated",
+                 "shipment": "Shipment Status"}
+columns_order = ["orderId", "customerName", "itemDescription", "quantity", "total", "currency",  "payment", "shipment", "shipmentInitiated"]
 order_dict = [{"name": order_columns[k], "id": k} for k in columns_order]
 
-orders_table = html.Div(dash_table.DataTable(id='order-table', columns= order_dict,
+orders_table = html.Div(dbc.Spinner(dash_table.DataTable(id='order-table', columns= order_dict,
 style_cell_conditional=[
         {'if': {'column_id': 'orderId'},
-         'width': '10%'},
+         'width': '5%'},
         {'if': {'column_id': 'quantity'},
          'width': '10%'},
          {'if': {'column_id': 'currency'},
@@ -35,7 +39,7 @@ style_header={
         'fontWeight': 'bold'
     }, 
 style_as_list_view=True,
-), className='page-card')
+)), className='page-card')
 
 
 customer_o_input = dbc.FormGroup(
@@ -139,18 +143,32 @@ def stock_table(pathname, create, customerId, itemId, quantity, cardNumber):
         if button_id == 'order_submit':
             order = {
                 "customerId": customerId,
-                "itemId": itemId,
+                "productId": itemId,
                 "quantity": quantity,
                 "customerEmail": requests.get(API_ENDPOINTS['CUSTOMERS']['GET1']+str(customerId)).json()['email'],
                 "cardNumber": cardNumber
             }
-            print(order)
             requests.post(API_ENDPOINTS['ORDER']['POST'], json=order)
         else:
             pass
     orders = requests.get(API_ENDPOINTS['ORDER']['GET']).json()
     for order in orders:
-        order["total"] = order["quantity"] * order["pricePerUnit"] 
+        orderid = order['orderId']
+        order["total"] = order["quantity"] * order["pricePerUnit"]
+        payment = requests.get(API_ENDPOINTS["PAYMENT"]["ORDERID"]+str(orderid))
+        shipment = requests.get(API_ENDPOINTS["SHIPMENT"]["ORDERID"]+str(orderid))
+        if payment.status_code == 404:
+            order['payment'] = 'Pending'
+        else:
+            payment_body = payment.json()
+            order['payment'] = "Successful" if payment_body["paymentSuccessful"] else "Failed !"
+        if shipment.status_code == 404:
+            order['shipment'] = 'Pending'
+            order['shipmentInitiated'] = "N/A"
+        else:
+            shipment_body = shipment.json()
+            order['shipment'] = 'True' if shipment_body['initiated'] else "False" 
+            order['shipmentInitiated'] = shipment_body['initiatedTime'] if shipment_body['initiated'] else "N/A"
     return orders
 
 

@@ -12,7 +12,7 @@ customer_columns = {"address": "Address", "countryCode": "Country", "customerId"
 columns_order = ["customerId", "name", "email", "address", "countryCode"]
 customer_dict = [{"name": customer_columns[k], "id": k} for k in columns_order]
 
-customer_table = html.Div(dash_table.DataTable(id='customer-table', columns= customer_dict,
+customer_table = html.Div(dbc.Spinner(dash_table.DataTable(id='customer-table', columns= customer_dict,
 style_cell_conditional=[
         {'if': {'column_id': 'customerId'},
          'width': '10%'},
@@ -27,7 +27,7 @@ style_header={
         'fontWeight': 'bold'
     }, 
 style_as_list_view=True,
-), className='page-card')
+)), className='page-card')
 
 
 name_input = dbc.FormGroup(
