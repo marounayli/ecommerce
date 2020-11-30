@@ -141,3 +141,14 @@ def stock_table(pathname, create, description, price, currency, available, weigh
         else:
             pass
     return requests.get(API_ENDPOINTS['STOCK']['GET']).json()
+
+@app.callback(
+    [Output('product_description', 'value'),
+    Output('product_price', 'value'),
+    Output('product_currency', 'value'),
+    Output('product_available', 'value'),
+    Output('product_weight', 'value')],
+    [Input('product_submit', 'n_clicks')]
+)
+def reset_fields(n_clicks):
+    return None, None, None, None, None

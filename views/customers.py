@@ -116,3 +116,13 @@ def customer_table(pathname, create, name, email, address, country):
         else:
             pass
     return requests.get(API_ENDPOINTS['CUSTOMERS']['GET']).json()
+
+@app.callback(
+    [Output('customer_name', 'value'),
+    Output('customer_email', 'value'),
+    Output('customer_address', 'value'),
+    Output('customer_country', 'value')],
+    [Input('customer_submit', 'n_clicks')]
+)
+def reset_fields(n_clicks):
+    return None, None, None, None

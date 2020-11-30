@@ -17,7 +17,7 @@ order_columns = {"orderId": "ID",
                  "paymentSuccessful": "Payment",
                  "shipmentInitiatedTime": "Shipment Initiated",
                  "shipmentInitiated": "Shipment Status"}
-columns_order = ["orderId", "customerName", "productDescription", "quantity", "total", "currency",  "paymentSuccessful", "shipmentInitiated", "shipmentInitiatedTime"]
+columns_order = ["orderId", "customerName", "productDescription", "quantity", "totalPrice", "currency",  "paymentSuccessful", "shipmentInitiated", "shipmentInitiatedTime"]
 order_dict = [{"name": order_columns[k], "id": k} for k in columns_order]
 
 orders_table = html.Div(dbc.Spinner(dash_table.DataTable(id='order-table', columns= order_dict,
