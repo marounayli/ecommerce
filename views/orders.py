@@ -1,6 +1,4 @@
-import json
 from logging import PlaceHolder, shutdown
-
 from app import app, API_ENDPOINTS
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -12,14 +10,14 @@ import dash
 
 order_columns = {"orderId": "ID",
                  "customerName": "Customer Name", 
-                 "itemDescription": "Product Description",
+                 "productDescription": "Product Description",
                  "quantity": "Quantity",
-                 "total": "Total Price",
+                 "totalPrice": "Total Price",
                  "currency": "Currency",
                  "paymentSuccessful": "Payment",
                  "shipmentInitiatedTime": "Shipment Initiated",
                  "shipmentInitiated": "Shipment Status"}
-columns_order = ["orderId", "customerName", "itemDescription", "quantity", "total", "currency",  "paymentSuccessful", "shipmentInitiated", "shipmentInitiatedTime"]
+columns_order = ["orderId", "customerName", "productDescription", "quantity", "total", "currency",  "paymentSuccessful", "shipmentInitiated", "shipmentInitiatedTime"]
 order_dict = [{"name": order_columns[k], "id": k} for k in columns_order]
 
 orders_table = html.Div(dbc.Spinner(dash_table.DataTable(id='order-table', columns= order_dict,
@@ -186,3 +184,14 @@ def update_price(quantity, productId):
         return str(productPrice * quantity) + " " + currency
     else:
         dash.exceptions.PreventUpdate
+
+@app.callback(
+    [Output("customer_o_input", "value"),
+    Output("product_o_input", "value"),
+    Output("quantity_o_input", "value"),
+    Output("card_o_input", "value"),
+    Output("type_o_input", "value")],
+    [Input('order_submit', 'n_clicks')]
+)
+def reset_fields(n_clicks):
+    return None, None, None, None, None
