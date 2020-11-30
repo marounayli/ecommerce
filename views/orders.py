@@ -132,9 +132,10 @@ def toggle_collapse(n, is_open):
     [State("customer_o_input", "value"),
     State("product_o_input", "value"),
     State("quantity_o_input", "value"),
-    State("card_o_input", "value")]
+    State("card_o_input", "value"),
+    State("type_o_input", "value")]
 )
-def stock_table(pathname, create, customerId, itemId, quantity, cardNumber):
+def stock_table(pathname, create, customerId, itemId, quantity, cardNumber, paymentType):
     ctx = dash.callback_context
     if not ctx.triggered:
         pass
@@ -146,7 +147,8 @@ def stock_table(pathname, create, customerId, itemId, quantity, cardNumber):
                 "productId": itemId,
                 "quantity": quantity,
                 "customerEmail": requests.get(API_ENDPOINTS['CUSTOMERS']['GET1']+str(customerId)).json()['email'],
-                "cardNumber": cardNumber
+                "cardNumber": cardNumber,
+                "paymentType": paymentType
             }
             camunda_request = requests.post(API_ENDPOINTS['ORDER']['POST'], json=order)
         else:
