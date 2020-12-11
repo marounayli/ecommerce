@@ -20,7 +20,7 @@ API_ENDPOINTS = {
         "POST" : "http://localhost:5000/product"},
     'ORDER':
         {"GET" : "http://localhost:5000/orders",
-        "POST": "http://localhost:5000/order",
+        "POST": "http://localhost:8000/order/start/orderprocess",
         "DETAILS": "http://localhost:5000/order-details"},
     'PAYMENT':
         {
